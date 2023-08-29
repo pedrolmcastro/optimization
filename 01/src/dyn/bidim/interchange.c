@@ -1,4 +1,5 @@
 #include "dyn/bidim.h"
+#include "timing.h"
 
 
 int main() {
@@ -6,6 +7,7 @@ int main() {
     dyn_bidim_mat_t right = alloc_rand_dyn_bidim_mat();
     dyn_bidim_mat_t product = alloc_zero_dyn_bidim_mat();
 
+    BEGIN_TIMING_SECTION(matmul);
 
     for (size_t i = 0; i < SIZE; ++i) {
         for (size_t k = 0; k < SIZE; ++k) {
@@ -14,6 +16,10 @@ int main() {
             }
         }
     }
+
+    END_TIMING_SECTION(matmul);
+
+    print_timings();
 
 
     free_dyn_bidim_mat(left);

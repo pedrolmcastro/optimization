@@ -18,6 +18,12 @@ CFLAGS += -I$(INCDIR) -std=c11 -Werror -Wall -Wextra -pedantic -MMD -MP
 
 all: $(BIN)
 
+run_all: $(BIN)
+	@echo -n $(BIN) | xargs -n 1 -d' ' -I{} sh -c 'echo {} && ./{}'
+
+run_perf:
+	@eval './profile.py $(BIN)'
+
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -34,7 +40,7 @@ clean:
 	@$(RM) $(ZIP) $(OBJ) $(DEP) $(BIN)
 
 
-.PHONY: clean zip
+.PHONY: clean zip all run_all run_perf
 .SECONDARY: $(OBJS)
 
 

@@ -1,4 +1,5 @@
 #include "static.h"
+#include "timing.h"
 
 
 int main() {
@@ -11,6 +12,7 @@ int main() {
     static_mat_t product;
     zero_static_mat(product);
 
+    BEGIN_TIMING_SECTION(matmul);
 
     for (size_t i = 0; i < SIZE; ++i) {
         for (size_t j = 0; j < SIZE; ++j) {
@@ -22,6 +24,10 @@ int main() {
             }
         }
     }
+
+    END_TIMING_SECTION(matmul);
+
+    print_timings();
 
 
     return 0;

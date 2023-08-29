@@ -1,4 +1,5 @@
 #include "dyn/unidim.h"
+#include "timing.h"
 
 
 int main() {
@@ -6,6 +7,7 @@ int main() {
     dyn_unidim_mat_t right = alloc_rand_dyn_unidim_mat();
     dyn_unidim_mat_t product = alloc_zero_dyn_unidim_mat();
 
+    BEGIN_TIMING_SECTION(matmul);
 
     for (size_t i = 0; i < SIZE; ++i) {
         for (size_t j = 0; j < SIZE; ++j) {
@@ -14,6 +16,10 @@ int main() {
             }
         }
     }
+
+    END_TIMING_SECTION(matmul);
+
+    print_timings();
 
 
     free_dyn_unidim_mat(left);
