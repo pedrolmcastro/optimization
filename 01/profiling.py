@@ -3,7 +3,7 @@
 import sys
 import csv
 import json
-import importlib
+import importlib.util
 from subprocess import check_output, run
 from collections import defaultdict
 
@@ -41,7 +41,8 @@ def main():
             "measurements": measurements,
         })
 
-    print(json.dumps({
+    with open("profiling.json", 'w') as prof_file:
+        prof_file.write(json.dumps({
         "cpu_info": json.loads(cpu_info),
         "date": date,
         "data": all_measurements,
