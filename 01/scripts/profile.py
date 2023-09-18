@@ -23,19 +23,19 @@ class Perf:
 
 def main():
     if len(sys.argv) < 4:
-        error(f"Usage: python3 {sys.argv[0]} runs path/to/output.json [path/to/executable ...]")
+        abort(f"Usage: python3 {sys.argv[0]} runs path/to/output.json [path/to/executable ...]")
 
 
     runs = int(sys.argv[1]) if sys.argv[1].isdigit() else 0
 
     if runs <= 0:
-        error("The number of runs must be a positive integer")
+        abort("The number of runs must be a positive integer")
 
 
     outpath = pathlib.Path(sys.argv[2])
 
     if outpath.suffix != ".json":
-        error("The output filepath must point to an .json file")
+        abort("The output filepath must point to an .json file")
 
     outpath.parent.mkdir(exist_ok = True)
 
@@ -45,14 +45,14 @@ def main():
 
 
     logging.info(f"Start profiling: {date}")
-    data = []
+    data = {}
 
-    for bin in sys.argv[3:]:
-        logging.info(f"Profiling {bin}")
+    for filepath in sys.argv[3:]:
+        logging.info(f"Profiling {filepath}")
         measurements = collections.defaultdict(list)
 
         for i in tqdm.tqdm(range(runs)):
-            result = subprocess.run(f"{Perf.COMMAND} {bin}", capture_output = True, shell = True)
+            result = subprocess.run(f"{Perf.COMMAND} {filepath}", capture_output = True, shell = True)
 
             stdout = result.stdout.decode()
             stderr = result.stderr.decode()
@@ -63,10 +63,7 @@ def main():
             for name, time in csv.reader(stdout.splitlines()):
                 measurements[name].append(float(time))
 
-        data.append({
-            "bin": bin,
-            "measurements": measurements,
-        })
+        data[filepath] = measurements
 
 
     with outpath.open('w') as output:
@@ -77,7 +74,7 @@ def main():
         }, indent = 2))
 
 
-def error(message: str) -> typing.NoReturn:
+def abort(message: str) -> typing.NoReturn:
     logging.error(message)
     sys.exit(1)
 
