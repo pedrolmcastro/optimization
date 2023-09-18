@@ -14,16 +14,16 @@ DEP := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.d,$(SRC))
 OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 BIN := $(patsubst $(SRCDIR)/%.c,$(BINDIR)/%.out,$(SRC))
 
-CC := gcc
+CC := gcc-11
 LDLIBS += -lm
-CFLAGS += -I$(INCDIR) -std=c11 -Werror -Wall -Wextra -pedantic -MMD -MP
+CFLAGS += -I$(INCDIR) -std=c11 -O0 -Werror -Wall -Wextra -pedantic -MMD -MP
 
 
 # Execution config variables
 RUNS := 15
 SIZE := 512
 REPEATS := 1
-PROFILED := $(OUTDIR)/profiled.json
+PROFILING := $(OUTDIR)/profiling.json
 
 
 all: $(BIN)
@@ -45,10 +45,10 @@ requirements:
 	@pip install -r $(SRPDIR)/requirements.txt
 
 profile: $(BIN)
-	@python3 $(SRPDIR)/profile.py $(RUNS) $(PROFILED) $(BIN)
+	@python3 $(SRPDIR)/profile.py $(RUNS) $(PROFILING) $(BIN)
 
 stats:
-	@python3 $(SRPDIR)/stats.py $(PROFILED)
+	@python3 $(SRPDIR)/stats.py $(PROFILING)
 
 
 zip:
