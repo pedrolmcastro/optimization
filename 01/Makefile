@@ -1,17 +1,17 @@
 ZIP := 01.zip
 
-BINDIR := bin
-OBJDIR := obj
-OUTDIR := out
 SRCDIR := src
+OBJDIR := obj
+BINDIR := bin
+OUTDIR := out
 INCDIR := include
 SRPDIR := scripts
 
-INC := $(shell find $(INCDIR) -name "*.h")
+SRP := $(shell find $(SRPDIR) -name "*")
 SRC := $(shell find $(SRCDIR) -name "*.c")
-SRP := $(shell find $(SRPDIR) -name "*.py")
-OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
+INC := $(shell find $(INCDIR) -name "*.h")
 DEP := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.d,$(SRC))
+OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 BIN := $(patsubst $(SRCDIR)/%.c,$(BINDIR)/%.out,$(SRC))
 
 CC := gcc
@@ -20,7 +20,7 @@ CFLAGS += -I$(INCDIR) -std=c11 -Werror -Wall -Wextra -pedantic -MMD -MP
 
 
 # Execution config variables
-RUNS := 10
+RUNS := 15
 SIZE := 512
 REPEATS := 1
 PROFILED := $(OUTDIR)/profiled.json
@@ -43,6 +43,9 @@ run: $(BIN)
 profile: $(BIN)
 	@python3 $(SRPDIR)/profile.py $(RUNS) $(PROFILED) $(BIN)
 
+stats:
+	@python3 $(SRPDIR)/stats.py $(PROFILED)
+
 
 zip:
 	@zip $(ZIP) $(SRC) $(INC) $(SRP) Makefile
@@ -52,7 +55,7 @@ clean:
 
 
 .SECONDARY: $(OBJS)
-.PHONY: all run profile zip clean
+.PHONY: all run profile stats zip clean
 
 
 -include $(DEP)
