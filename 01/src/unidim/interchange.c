@@ -9,7 +9,7 @@ int main() {
     dyn_unidim_mat_t product = alloc_zero_dyn_unidim_mat();
 
 
-    BEGIN_TIMING_SECTION(matmul);
+    BEGIN_TIMING_SECTION(execution_time);
 
     for (size_t repeat = 0; repeat < REPEATS; ++repeat) {
         for (size_t i = 0; i < SIZE; ++i) {
@@ -21,7 +21,7 @@ int main() {
         }
     }
 
-    END_TIMING_SECTION(matmul);
+    END_TIMING_SECTION(execution_time);
     print_timings();
 
 

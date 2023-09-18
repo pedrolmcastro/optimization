@@ -14,7 +14,7 @@ int main() {
     zero_static_mat(product);
 
 
-    BEGIN_TIMING_SECTION(matmul);
+    BEGIN_TIMING_SECTION(execution_time);
 
     for (size_t repeat = 0; repeat < REPEATS; ++repeat) {
         for (size_t i = 0; i < SIZE; ++i) {
@@ -29,7 +29,7 @@ int main() {
         }
     }
 
-    END_TIMING_SECTION(matmul);
+    END_TIMING_SECTION(execution_time);
     print_timings();
 
 

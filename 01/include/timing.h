@@ -11,7 +11,7 @@
 // Timing section definitions
 // NOTE(gd): Maybe move this to a different file
 #define TIMING_SECTIONS \
-    DEFINE_TIMING_SECTION(matmul)
+    DEFINE_TIMING_SECTION(execution_time)
 
 
 // Timing API
