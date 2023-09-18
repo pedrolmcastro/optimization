@@ -40,6 +40,10 @@ $(BINDIR)/%.out: $(OBJDIR)/%.o
 run: $(BIN)
 	@echo -n $(BIN) | xargs -d' ' -I{} sh -c 'echo {} && ./{}'
 
+
+requirements:
+	@pip install -r $(SRPDIR)/requirements.txt
+
 profile: $(BIN)
 	@python3 $(SRPDIR)/profile.py $(RUNS) $(PROFILED) $(BIN)
 
