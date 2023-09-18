@@ -40,7 +40,7 @@ def main():
             error = st.sem(values)
             delta = error * st.t.ppf((CONFIDENCE + 1) / 2, len(values) - 1)
 
-            print(f"{metric :<24} | {mean :<15.2f} ± {delta :<10.2f} | {median :<.2f}")
+            print(f"{metric :<24} | {mean :<15.2f} ± {delta :<10.2f} | {median :.2f}")
 
         print(f"{DIVISION}\n")
 
@@ -61,13 +61,13 @@ def unmangle(filepath: str) -> str:
         algorithm = "Loop interchange"
 
     if "static" in filepath:
-        allocation = "Alocação estática"
+        allocation = "Estática"
     elif "unidim" in filepath:
-        allocation = "Alocação dinâmica unidimencional"
+        allocation = "Dinâmica unidimensional"
     elif "bidim" in filepath:
-        allocation = "Alocação dinâmica bidimencional"
+        allocation = "Dinâmica bidimensional"
 
-    return f"{algorithm} + {allocation}"
+    return f"{allocation} + {algorithm}"
 
 
 if __name__ == "__main__":
