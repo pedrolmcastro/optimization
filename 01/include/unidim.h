@@ -1,5 +1,5 @@
-#ifndef DYN_UNIDIM_H
-#define DYN_UNIDIM_H
+#ifndef UNIDIM_H
+#define UNIDIM_H
 
 
 #include <assert.h>

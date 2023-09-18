@@ -1,5 +1,5 @@
-#ifndef DYN_BIDIM_H
-#define DYN_BIDIM_H
+#ifndef BIDIM_H
+#define BIDIM_H
 
 
 #include <assert.h>
