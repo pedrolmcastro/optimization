@@ -2,8 +2,13 @@
 #define CONFIG_H
 
 
-#define SIZE 512
-#define REPEATS 10
+#ifndef SIZE
+    #define SIZE 512
+#endif
+
+#ifndef REPEATS
+    #define REPEATS 1
+#endif
 
 
 #endif
