@@ -1,10 +1,12 @@
 #ifndef TIMING_H
 #define TIMING_H
 
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 
 // Timing section definitions
 // NOTE(gd): Maybe move this to a different file

@@ -1,17 +1,12 @@
+#include "bidim.h"
 #include "config.h"
-#include "static.h"
 #include "timing.h"
 
 
 int main() {
-    static_mat_t left;
-    randomize_static_mat(left);
-
-    static_mat_t right;
-    randomize_static_mat(right);
-
-    static_mat_t product;
-    zero_static_mat(product);
+    dyn_bidim_mat_t left = alloc_rand_dyn_bidim_mat();
+    dyn_bidim_mat_t right = alloc_rand_dyn_bidim_mat();
+    dyn_bidim_mat_t product = alloc_zero_dyn_bidim_mat();
 
 
     BEGIN_TIMING_SECTION(matmul);
@@ -32,6 +27,10 @@ int main() {
     END_TIMING_SECTION(matmul);
     print_timings();
 
+
+    free_dyn_bidim_mat(left);
+    free_dyn_bidim_mat(right);
+    free_dyn_bidim_mat(product);
 
     return 0;
 }

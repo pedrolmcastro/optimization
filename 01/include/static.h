@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "size.h"
+#include "config.h"
 #include "scalar.h"
 
 

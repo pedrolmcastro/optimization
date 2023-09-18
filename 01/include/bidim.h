@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "size.h"
+#include "config.h"
 #include "scalar.h"
 
 

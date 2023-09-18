@@ -7,10 +7,10 @@ import importlib.util
 from subprocess import check_output, run
 from collections import defaultdict
 
-runs = 10
+runs = 1
 
-perf_events="branch-instructions,branch-misses,L1-dcache-load-misses,L1-dcache-loads"
-perf_flags=f"-x ',' -e {perf_events} --append"
+perf_events = "branch-instructions,branch-misses,L1-dcache-load-misses,L1-dcache-loads"
+perf_flags = f"-x ',' -e {perf_events} --append"
 
 def main():
     cpu_info = check_output("lscpu -J", shell=True)
@@ -20,16 +20,17 @@ def main():
 
     all_measurements = []
     for bin in sys.argv[1:]:
-        begin_profile_msg = f"Profiling ${bin}..."
+        begin_profile_msg = f"Profiling {bin}..."
         print(begin_profile_msg, file=sys.stderr)
 
         measurements = defaultdict(list)
         for i in tqdm(range(runs)):
             result = run(
-                f"TIMING_CSV=1 perf stat {perf_flags} {bin}",
+                f"sudo TIMING_CSV=1 perf stat {perf_flags} {bin}",
                 capture_output=True, shell=True)
             stderr = result.stderr.decode()
             stdout = result.stdout.decode()
+
             for measure, _, name, *rest in csv.reader(stderr.splitlines()):
                 measurements[name].append(int(measure))
 
