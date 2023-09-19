@@ -7,6 +7,7 @@ OUTDIR := out
 INCDIR := include
 SRPDIR := scripts
 
+DOC := $(shell find . -name "*.pdf")
 SRP := $(shell find $(SRPDIR) -name "*")
 SRC := $(shell find $(SRCDIR) -name "*.c")
 INC := $(shell find $(INCDIR) -name "*.h")
@@ -52,7 +53,7 @@ stats:
 
 
 zip:
-	@zip $(ZIP) $(SRC) $(INC) $(SRP) Makefile
+	@zip $(ZIP) $(SRC) $(INC) $(SRP) $(DOC) Makefile
 
 clean:
 	@$(RM) $(ZIP) $(OBJ) $(DEP) $(BIN)
