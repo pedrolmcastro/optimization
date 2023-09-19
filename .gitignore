@@ -52,4 +52,5 @@ Mkfile.old
 dkms.conf
 
 # Execution output files
+*.zip
 */out
