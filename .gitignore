@@ -54,3 +54,6 @@ dkms.conf
 # Execution output files
 *.zip
 */out
+
+# Local config
+.vscode
