@@ -9,7 +9,7 @@
 #define MB (1024 * KB)
 #define GB (1024 * MB)
 
-#define CACHE_SIZE (9 * MB)
+#define CACHE_SIZE (12 * MB)
 
 
 typedef unsigned char byte_t;
