@@ -44,6 +44,18 @@ zip:
 
 clean:
 	@$(RM) $(ZIP) $(OBJ) $(DEP) $(BIN)
+	@$(RM) -r $(sort $(dir $(wildcard gprof/*/)))
+	@$(RM) -r $(sort $(dir $(wildcard graph/*/)))
+
+
+NUMBERS := 0 1 2 3 4 5 6 7 8 9
+
+graph_gprof:
+	@python3 -m pip install --break-system-packages --user graphviz
+	@mkdir -p $(GRAPHDIR)/dots $(GRAPHDIR)/pngs
+	@$(foreach rep, $(NUMBERS), \
+		gprof2dot $(PROFDIR)/reports/$(rep).out > $(GRAPHDIR)/dots/$(rep).dot; \
+		dot -Tpng $(GRAPHDIR)/dots/$(rep).dot -o $(GRAPHDIR)/pngs/$(rep).png;)
 
 
 .SECONDARY: $(OBJ)
