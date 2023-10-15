@@ -36,21 +36,21 @@ $(BIN): $(OBJ)
 run:
 	@$(BIN)
 
-run_gprof:
+run_gprof: all
 	@python3 $(PRF) $(NEXECS) $(BIN) $(MON)
 
 zip:
 	@zip $(ZIP) $(SRC) $(INC) $(DOC) Makefile
 
 clean:
-	@$(RM) $(ZIP) $(OBJ) $(DEP) $(BIN)
+	@$(RM) $(ZIP) $(OBJ) $(DEP) $(BIN) $(MON)
 	@$(RM) -r $(sort $(dir $(wildcard gprof/*/)))
 	@$(RM) -r $(sort $(dir $(wildcard graph/*/)))
 
 
 NUMBERS := 0 1 2 3 4 5 6 7 8 9
 
-graph_gprof:
+graph_gprof: run_gprof
 	@python3 -m pip install --break-system-packages --user graphviz
 	@mkdir -p $(GRAPHDIR)/dots $(GRAPHDIR)/pngs
 	@$(foreach rep, $(NUMBERS), \
