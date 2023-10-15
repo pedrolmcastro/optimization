@@ -6,8 +6,7 @@
 #include "scalar.h"
 
 
-#define SIZE 1024
-
+#define SIZE (379 * KB)
 
 int main() {
     scalar_t random[SIZE];
