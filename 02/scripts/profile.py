@@ -11,10 +11,11 @@ import subprocess
 import pandas as pd
 from collections import defaultdict
 
+
 class Gprof:
     """
     Flags:
-        -b : Print data without explanation.        
+        -b : Print data without explanation.
     """
     FLAGS = "-b"
 
@@ -27,12 +28,13 @@ class Gprof:
         'calls',
         'self ms/call',
         'total ms/call',
-        'name'    
+        'name'
     ]
 
+
 def main():
-    if len(sys.argv) < 3:
-        abort(f"Usage: python3 {sys.argv[0]} path/to/executable")
+    if len(sys.argv) < 4:
+        abort(f"Usage: python3 {sys.argv[0]} runs path/to/executable path/to/gmon.out")
 
     runs = int(sys.argv[1]) if sys.argv[1].isdigit() else 0
 
@@ -42,38 +44,35 @@ def main():
     cpu = subprocess.check_output("lscpu -J", shell = True)
     date = subprocess.check_output("date").decode().strip()
 
-    gmon_filename = pathlib.Path("./gmon.out")
-
     logging.info(f"Start profiling: {date}")
-    
+
     executions = defaultdict(float)
 
-    result = subprocess.run("mkdir -p gprof/reports gprof/outputs", capture_output = True, shell = True)
+    subprocess.run("mkdir -p out/jsons out/reports", capture_output = True, shell = True)
 
     for i in tqdm.tqdm(range(runs)):
-        _ = subprocess.run(f"{sys.argv[2]}", capture_output = True, shell = True)
-        result = subprocess.run(f"{Gprof.COMMAND} {sys.argv[2]} {gmon_filename}", capture_output = True, shell = True)
+        subprocess.run(f"{sys.argv[2]}", capture_output = True, shell = True)
+        result = subprocess.run(f"{Gprof.COMMAND} {sys.argv[2]} {sys.argv[3]}", capture_output = True, shell = True)
 
         stdout = result.stdout.decode()
-        stderr = result.stderr.decode()
 
         measurements = structure_data(stdout.splitlines())
         executions[i] = measurements
 
-        with open(f"./gprof/reports/{i}.out", "w+") as f:
+        with open(f"out/reports/{i}.out", "w+") as f:
             f.write(stdout)
 
     index = pd.MultiIndex.from_product((measurements.keys(), Gprof.FLAT_PROFILE_COLS))
 
     executions = [tuple([executions[i][j][k] for j,k in index]) for i in range(runs)]
     dataframe = pd.DataFrame(executions, index=range(runs), columns=index)
-    
-    outpath = pathlib.Path("./gprof/outputs/time.out")
-    outpath_stats = pathlib.Path("./gprof/outputs/stats.out")
+
+    outpath = pathlib.Path("out/jsons/time.out")
+    outpath_stats = pathlib.Path("out/jsons/stats.out")
 
     if outpath.suffix != ".out":
         abort("The output filepath must point to an .out file")
-    
+
     outpath.parent.mkdir(exist_ok = True)
 
     with outpath.open("w+") as output:
@@ -90,7 +89,7 @@ def main():
             "cpu": json.loads(cpu),
             "date": date,
             "data": json.loads(dataframe.describe().reset_index().to_json(orient='records')),
-        }, indent = 2)) 
+        }, indent = 2))
 
 
 def abort(message: str) -> typing.NoReturn:
@@ -101,7 +100,7 @@ def structure_data(data : str) -> defaultdict:
     """
     Gets pure data from gprof output and structures it into a json file
     """
-    get_data = False    
+    get_data = False
     measures = defaultdict(float)
 
     for line in data:
