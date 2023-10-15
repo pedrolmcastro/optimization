@@ -2,38 +2,23 @@
 
 import re
 import sys
-import csv
 import json
-import time
+import tqdm
 import typing
 import logging
 import pathlib
 import subprocess
 import pandas as pd
 from collections import defaultdict
-from io import StringIO
-
-import tqdm
 
 class Gprof:
     """
     Flags:
-        -z : Show all, even unused, functions.
-        -c : Show what functions were never called.
-        -b : Print data without explanation.
+        -b : Print data without explanation.        
     """
-    FLAGS = "-z -c -b"
+    FLAGS = "-b"
 
     COMMAND = f"gprof {FLAGS}"
-
-    CALL_GRAPH_COLS = [
-        'index',
-        '% time',
-        'self',
-        'children',
-        'called',
-        'name'
-    ]
 
     FLAT_PROFILE_COLS = [
         '% time',
