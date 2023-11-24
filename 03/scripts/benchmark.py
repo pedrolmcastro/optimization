@@ -108,7 +108,7 @@ def table(times: list[Time]):
 
         return (
             f"{statistics.mean(compilations) :.6f} ± {delta(compilations) :<10.6f} | " +
-            f"{statistics.mean(compilations) :.6f} ± {delta(executions) :<10.6f}"
+            f"{statistics.mean(executions) :.6f} ± {delta(executions) :<10.6f}"
         )
 
     return (
