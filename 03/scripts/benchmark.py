@@ -2,6 +2,7 @@ import sys
 import resource
 import statistics
 import subprocess
+import scipy.stats
 
 from pathlib import Path
 from dataclasses import dataclass
@@ -74,7 +75,7 @@ def main():
 
         print(f"Optimization level: {optimization}")
         print(f"{size} bytes", end = "\n\n")
-        print(table(*times), end = "\n\n")
+        print(table(times), end = "\n\n")
 
 
 def run(*args: str) -> float:
@@ -92,19 +93,30 @@ def run(*args: str) -> float:
     return usage.ru_utime + usage.ru_stime - start
 
 
-def table(*times: Time):
+def delta(values: list[float]):
+    error = scipy.stats.sem(values)
+    return error * scipy.stats.t.ppf((0.95 + 1) / 2, len(values) - 1)
+
+
+def table(times: list[Time]):
     def line(time: Time) -> str:
         return f"{time.compilation :<21.6f} | {time.execution :.6f}"
 
-    compilation = statistics.mean(map(lambda time: time.compilation, times))
-    execution = statistics.mean(map(lambda time: time.execution, times))
+    def footer(times: list[Time]):
+        compilations = [time.compilation for time in times]
+        executions = [time.execution for time in times]
+
+        return (
+            f"{statistics.mean(compilations) :.6f} ± {delta(compilations) :<10.6f} | " +
+            f"{statistics.mean(compilations) :.6f} ± {delta(executions) :<10.6f}"
+        )
 
     return (
-         "Compilation time (ms) | Execution time (ms)\n" +
-         "----------------------+--------------------\n" +
-         '\n'.join(map(line, times))              + '\n' +
-         "----------------------+--------------------\n" +
-        f"{compilation  :<21.6f} | {execution :.6f}"
+        "Compilation time (ms) | Execution time (ms)\n" +
+        "----------------------+--------------------\n" +
+        '\n'.join(map(line, times))              + '\n' +
+        "----------------------+--------------------\n" +
+        footer(times)
     )
 
 
