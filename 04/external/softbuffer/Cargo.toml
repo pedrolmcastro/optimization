@@ -1,0 +1,15 @@
+[package]
+name = "softbuffer-bindings"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]      # Creates dynamic lib
+# crate-type = ["staticlib"] # Creates static lib
+
+[dependencies]
+raw-window-handle = "0.6.0"
+softbuffer = "0.4.0"
+
+[dev-dependencies]
+winit = "0.29.4"
