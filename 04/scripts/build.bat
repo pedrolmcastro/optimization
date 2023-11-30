@@ -23,4 +23,4 @@ call "%VSTOOLS%..\..\VC\vcvarsall.bat" x64
 :vs_done
 
 cmake . -B build
-cmake --build build %*
+cmake --build build --config %1
