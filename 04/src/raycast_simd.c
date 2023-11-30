@@ -32,7 +32,7 @@ void ComputeSceneSimd() {
     Vec3Simd viewportUpperLeft = Vec3Simd_Sub(Vec3Simd_Sub(cameraOnViewport, halfViewportU), halfViewportV);
     Vec3Simd pixelCenterOffset = Vec3Simd_ScalarDiv(Vec3Simd_Add(pixelDeltaU, pixelDeltaV), _mm_set1_ps(2.0f));
     Vec3Simd startPixelPos = Vec3Simd_Add(viewportUpperLeft, pixelCenterOffset);
-    
+
     u32 stepY = 2;
     u32 stepX = 2;
     u32 nLanes = 4;
@@ -53,14 +53,28 @@ void ComputeSceneSimd() {
             ColorSimd color = ComputeRayColorSimd(ray);
 
             for (u32 lane = 0; lane < nLanes; lane++) {
-                Color colorAt = {
-                    .r = ((Simd128)color.r).m128_f32[lane],
-                    .g = ((Simd128)color.g).m128_f32[lane],
-                    .b = ((Simd128)color.b).m128_f32[lane],
-                    .a = ((Simd128)color.a).m128_f32[lane],
-                };
-                u32 dx = (u32)((Simd128)offsetsX).m128_f32[lane];
-                u32 dy = (u32)((Simd128)offsetsY).m128_f32[lane];
+                #ifdef _MSC_VER
+                    Color colorAt = {
+                            .r = color.r.m128_f32[lane],
+                            .g = color.g.m128_f32[lane],
+                            .b = color.b.m128_f32[lane],
+                            .a = color.a.m128_f32[lane],
+                    };
+
+                    u32 dx = (u32)offsetsX.m128_f32[lane];
+                    u32 dy = (u32)offsetsY.m128_f32[lane];
+                #else
+                    Color colorAt = {
+                        .r = ((Simd128)color.r).m128_f32[lane],
+                        .g = ((Simd128)color.g).m128_f32[lane],
+                        .b = ((Simd128)color.b).m128_f32[lane],
+                        .a = ((Simd128)color.a).m128_f32[lane],
+                    };
+
+                    u32 dx = (u32)((Simd128)offsetsX).m128_f32[lane];
+                    u32 dy = (u32)((Simd128)offsetsY).m128_f32[lane];
+                #endif
+                
                 WritePixel(x + dx, y + dy, ColorToColorU32(colorAt));
             }
         }
