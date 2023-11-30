@@ -19,7 +19,7 @@ add_subdirectory(external/softbuffer)
 if(MSVC)
     target_compile_options(CCanvas PRIVATE /W4)
 else()
-    target_compile_options(CCanvas PRIVATE -Wall -Wextras -pedantic)
+    target_compile_options(CCanvas PRIVATE -Wall -Wextra -pedantic -march=native)
 endif()
 
 target_link_libraries(CCanvas PRIVATE glfw softbuffer)

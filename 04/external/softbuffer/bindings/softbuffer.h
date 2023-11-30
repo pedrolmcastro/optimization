@@ -9,6 +9,8 @@
 
 #if defined(_WIN32)
 #define GLFW_EXPOSE_NATIVE_WIN32
+#else
+#define GLFW_EXPOSE_NATIVE_X11
 #endif
 #include <GLFW/glfw3native.h>
 
@@ -20,17 +22,15 @@ extern Surface* sbSurfaceNew(size_t hwnd, size_t hinstance);
 extern Surface* sbSurfaceNew(void* x11Display, int screen, unsigned long window);
 #endif
 
-Surface* sbSurfaceFromGlfw(GLFWwindow* window) {
+static inline Surface* sbSurfaceFromGlfw(GLFWwindow* window) {
 #if defined(_WIN32)
     HWND hwnd = glfwGetWin32Window(window);
     HINSTANCE hinstance = GetModuleHandle(NULL);
     return sbSurfaceNew(hwnd, hinstance);
 #else
     void* display = glfwGetX11Display();
-    GLFWmonitor* monitor = glfwGetX11Monitor();
-    int screen = glfwGetX11Monitor(monitor);
-    unsigned long window = glfwGetX11Window(window);
-    return sbSurfaceNew(display, monitor, window);
+    unsigned long x11Window = glfwGetX11Window(window);
+    return sbSurfaceNew(display, 0, x11Window);
 #endif
 }
 

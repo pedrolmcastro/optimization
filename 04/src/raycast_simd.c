@@ -1,5 +1,10 @@
 #include "raycast_simd.h"
 
+typedef union {
+    f32 m128_f32[4];
+    __m128 lane;
+} Simd128;
+
 inline static ColorSimd ColorSimd_ScalarMul(ColorSimd color, f32Simd factor);
 inline static ColorSimd ColorSimd_Blend(ColorSimd background, ColorSimd overlay);
 
@@ -49,13 +54,13 @@ void ComputeSceneSimd() {
 
             for (u32 lane = 0; lane < nLanes; lane++) {
                 Color colorAt = {
-                    .r = color.r.m128_f32[lane],
-                    .g = color.g.m128_f32[lane],
-                    .b = color.b.m128_f32[lane],
-                    .a = color.a.m128_f32[lane],
+                    .r = ((Simd128)color.r).m128_f32[lane],
+                    .g = ((Simd128)color.g).m128_f32[lane],
+                    .b = ((Simd128)color.b).m128_f32[lane],
+                    .a = ((Simd128)color.a).m128_f32[lane],
                 };
-                u32 dx = (u32)offsetsX.m128_f32[lane];
-                u32 dy = (u32)offsetsY.m128_f32[lane];
+                u32 dx = (u32)((Simd128)offsetsX).m128_f32[lane];
+                u32 dy = (u32)((Simd128)offsetsY).m128_f32[lane];
                 WritePixel(x + dx, y + dy, ColorToColorU32(colorAt));
             }
         }

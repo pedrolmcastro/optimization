@@ -15,15 +15,27 @@ if (NOT ARCH)
     endif()
 endif()
 
-set(SOFTBUFFER_RUNTIME_LIB ${CMAKE_CURRENT_SOURCE_DIR}/bin/windows-${ARCH}/softbuffer_bindings.dll)
+if(WIN32)
+    set(SOFTBUFFER_RUNTIME_LIB ${CMAKE_CURRENT_SOURCE_DIR}/bin/windows-${ARCH}/softbuffer_bindings.dll)
 
-set_target_properties(
-    softbuffer
-    PROPERTIES
-        IMPORTED_LOCATION "${SOFTBUFFER_RUNTIME_LIB}"
-        IMPORTED_IMPLIB "${SOFTBUFFER_RUNTIME_LIB}.lib"
-        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/bindings"
-)
+    set_target_properties(
+        softbuffer
+        PROPERTIES
+            IMPORTED_LOCATION "${SOFTBUFFER_RUNTIME_LIB}"
+            IMPORTED_IMPLIB "${SOFTBUFFER_RUNTIME_LIB}.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/bindings"
+    )
+else()
+    set(SOFTBUFFER_RUNTIME_LIB ${CMAKE_CURRENT_SOURCE_DIR}/bin/linux-${ARCH}/libsoftbuffer_bindings.so)
+
+    set_target_properties(
+        softbuffer
+        PROPERTIES
+            IMPORTED_LOCATION "${SOFTBUFFER_RUNTIME_LIB}"
+            IMPORTED_IMPLIB "${SOFTBUFFER_RUNTIME_LIB}"
+            INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/bindings"
+    )
+endif()
 
 set(SOFTBUFFER_RUNTIME_LIB ${SOFTBUFFER_RUNTIME_LIB} PARENT_SCOPE)
 set(SOFTBUFFER_RUNTIME_LIB ${SOFTBUFFER_RUNTIME_LIB} CACHE INTERNAL "Path to the Softbuffer library binary")
